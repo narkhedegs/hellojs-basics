@@ -1,0 +1,33 @@
+{
+  "name": "hellojs-basics",
+  "version": "0.0.1",
+  "authors": [
+    "Gaurav Narkhede <gaurav.narkhede@gmail.com>"
+  ],
+  "description": "Basics of authentication using hello js.",
+  "main": "index.html",
+  "keywords": [
+    "hellojs",
+    "jquery",
+    "bootstrap",
+    "knockoutjs",
+    "zocial"
+  ],
+  "license": "MIT",
+  "homepage": "\"https://c9.io/gnarkhede/hellojs-basic/workspace/index.html\"",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.2.0",
+    "knockoutjs": "~3.1.0",
+    "hello": "~0.2.10",
+    "zocial": "*"
+  }
+}

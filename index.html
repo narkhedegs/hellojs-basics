@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <title>Hello Js Basics</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bower_components/zocial/css/zocial.css" />
+    <style>
+        body {
+            padding-top: 70px;
+        }
+
+        .table-user-information > tbody > tr {
+            border-top: 1px solid rgb(221, 221, 221);
+        }
+
+            .table-user-information > tbody > tr:first-child {
+                border-top: 0;
+            }
+
+            .table-user-information > tbody > tr > td {
+                border-top: 0;
+            }
+
+        .user-profile-picture {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Hello Js Basics</a>
+            </div>
+            <div class="collapse navbar-collapse"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12" align="center" data-bind="visible: !isAuthenticated()">
+                <button id="logInButton" class="zocial googleplus" data-bind="click: logIn">
+                    Log In With Google +
+                </button>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3" data-bind="visible: isAuthenticated(), with: user">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <span class="pull-right">
+                                <p class="text-info" data-bind="text: new Date().toDateString()"></p>
+                            </span>
+                            <!--ko text: name--><!--/ko--> 
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3" align="center">
+                                <img alt="User Pic"
+                                     class="img-circle user-profile-picture"
+                                     data-bind="attr: { src: thumbnail }"/>
+                            </div>
+                            <div class=" col-md-9 col-lg-9">
+                                <table class="table table-user-information">
+                                    <tbody>
+                                        <tr>
+                                            <td>Gender</td>
+                                            <td data-bind="text: gender"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Email</td>
+                                            <td><a data-bind="text: email, attr: { href: 'mailto:' + email }"></a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <span class="pull-right">
+                            <button id="logOutButton" class="btn btn-danger" data-bind="click: $root.logOut">Log Out</button>
+                        </span>
+                        <span class="clearfix"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/knockoutjs/dist/knockout.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="bower_components/hello/dist/hello.all.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                
+                function AuthenticationViewModel(hello) {
+                    var self = this;
+
+                    self.isAuthenticated = ko.observable();
+                    
+                    self.user = ko.observable();
+
+                    self.logIn = function () {
+                        hello('google').login();
+                    }
+
+                    self.logOut = function () {
+                        hello('google').logout();
+                    }
+
+                    hello.on('auth.login', function (auth) {
+                        hello(auth.network).api('/me').success(function (result) {
+                            self.isAuthenticated(true);
+                            self.user(result);
+                        }).error(function () {
+                            alert('error');
+                        });
+                    });
+
+                    hello.on('auth.logout', function () {
+                        self.isAuthenticated(false);
+                        self.user(null);
+                    });
+
+                    hello.init({
+                        google: '292814072520-8ie2rnq80gg97eop946p4ogcfj56ssqp.apps.googleusercontent.com'
+                    }, {
+                        redirect_uri: 'index.html'
+                    });
+                }
+
+                ko.applyBindings(new AuthenticationViewModel(hello));
+            });
+        </script>
+</body>
+
+</html>
